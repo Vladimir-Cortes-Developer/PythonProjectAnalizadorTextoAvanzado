@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="004f2c67-28fc-428f-9b9a-a62e98adb987" name="Changes" comment="feat(backend): adicione archivo cambio_climatico.txt">
-      <change afterPath="$PROJECT_DIR$/fix_nltk.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textos_ejemplo/educacion_digital.txt" afterDir="false" />
+    <list default="true" id="004f2c67-28fc-428f-9b9a-a62e98adb987" name="Changes" comment="feat(backend): adicione archivos setup.py &amp; fix_nltk.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analizador_texto_avanzado.py" beforeDir="false" afterPath="$PROJECT_DIR$/analizador_texto_avanzado.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,23 +43,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.analizador_texto_avanzado.executor": "Run",
-    "Python.ejemplo_uso.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.analizador_texto_avanzado.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ejemplo_uso.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="analizador_texto_avanzado" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="PythonProjectAnalizadorTextoAvanzado" />
@@ -107,7 +106,8 @@
       <option name="presentableId" value="Default" />
       <updated>1748452064158</updated>
       <workItem from="1748452065223" duration="313000" />
-      <workItem from="1748459053484" duration="4109000" />
+      <workItem from="1748459053484" duration="5611000" />
+      <workItem from="1748468571064" duration="2273000" />
     </task>
     <task id="LOCAL-00001" summary="feat(backend): Añada stopwords personalizadas. Añana Tokenización avanzada con diferentes niveles. Añana análisis completo de frecuencias de palabras. Añada Análisis de n-gramas. añada. Análisis de sentimientos usando múltiples métodos. Añada Clasifica el sentimiento basado en el score. Añada Extracción de entidades nombradas usando spaCy. Calcula métricas de legibilidad del texto. Realiza análisis completo del texto.">
       <option name="closed" value="true" />
@@ -165,7 +165,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748461948759</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="feat(backend): adicione archivos setup.py &amp; fix_nltk.py">
+      <option name="closed" value="true" />
+      <created>1748463513421</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1748463513421</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -200,7 +208,8 @@
     <MESSAGE value="feat(backend): Añada archivo readme.md" />
     <MESSAGE value="feat(backend): adicione archivo inteligencia_artificial.txt" />
     <MESSAGE value="feat(backend): adicione archivo cambio_climatico.txt" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(backend): adicione archivo cambio_climatico.txt" />
+    <MESSAGE value="feat(backend): adicione archivos setup.py &amp; fix_nltk.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(backend): adicione archivos setup.py &amp; fix_nltk.py" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -210,11 +219,16 @@
           <line>8</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/analizador_texto_avanzado.py.backup</url>
+          <line>14</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PythonProjectAnalizadorTextoAvanzado$ejemplo_uso.coverage" NAME="ejemplo_uso Coverage Results" MODIFIED="1748459173370" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/PythonProjectAnalizadorTextoAvanzado$analizador_texto_avanzado.coverage" NAME="analizador_texto_avanzado Coverage Results" MODIFIED="1748460364752" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PythonProjectAnalizadorTextoAvanzado$analizador_texto_avanzado.coverage" NAME="analizador_texto_avanzado Coverage Results" MODIFIED="1748468796206" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

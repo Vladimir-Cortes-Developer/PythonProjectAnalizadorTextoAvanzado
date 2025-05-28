@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Analizador de Texto Avanzado
-============================
+Analizador de Texto Avanzado - Versión Corregida
+===============================================
 Sistema completo de análisis de texto con múltiples funcionalidades:
 - Análisis de frecuencia de palabras y n-gramas
 - Análisis de sentimientos
@@ -35,7 +33,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Configuración de estilo para gráficos
-plt.style.use('seaborn-v0_8')
+plt.style.use('default')
 sns.set_palette("husl")
 
 
@@ -189,7 +187,7 @@ class AnalizadorTextoAvanzado:
             'diversidad_lexica': round(diversidad_lexica, 4),
             'mas_frecuentes': mas_frecuentes,
             'menos_frecuentes': menos_frecuentes,
-            'frecuencia_promedio': np.mean(list(freq_dist.values()))
+            'frecuencia_promedio': np.mean(list(freq_dist.values())) if freq_dist.values() else 0
         }
 
     def analizar_ngramas(self, palabras: List[str], n: int = 2, top_n: int = 10) -> List[Tuple]:
@@ -223,26 +221,27 @@ class AnalizadorTextoAvanzado:
         """
         resultados = {}
 
-        # TextBlob (traducido al inglés para mejor precisión)
+        # TextBlob - análisis directo en español
         try:
             blob = TextBlob(texto)
-            # Traducir al inglés para mejor análisis
-            texto_en = str(blob.translate(to='en'))
-            blob_en = TextBlob(texto_en)
 
             resultados['textblob'] = {
-                'polaridad': round(blob_en.sentiment.polarity, 4),
-                'subjetividad': round(blob_en.sentiment.subjectivity, 4),
-                'clasificacion': self._clasificar_sentimiento(blob_en.sentiment.polarity)
+                'polaridad': round(blob.sentiment.polarity, 4),
+                'subjetividad': round(blob.sentiment.subjectivity, 4),
+                'clasificacion': self._clasificar_sentimiento(blob.sentiment.polarity)
             }
         except Exception as e:
             print(f"Error en análisis TextBlob: {e}")
 
-        # VADER (inglés)
+        # VADER - necesita traducción manual simple
         try:
             from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
+            # Traducción básica de algunas palabras clave
+            texto_traducido = self._traducir_basico(texto)
+
             analyzer = SentimentIntensityAnalyzer()
-            scores = analyzer.polarity_scores(texto_en)
+            scores = analyzer.polarity_scores(texto_traducido)
 
             resultados['vader'] = {
                 'compuesto': round(scores['compound'], 4),
@@ -255,6 +254,33 @@ class AnalizadorTextoAvanzado:
             print(f"Error en análisis VADER: {e}")
 
         return resultados
+
+    def _traducir_basico(self, texto: str) -> str:
+        """Traducción básica de palabras clave para VADER"""
+        traducciones = {
+            'excelente': 'excellent',
+            'bueno': 'good',
+            'malo': 'bad',
+            'terrible': 'terrible',
+            'maravilloso': 'wonderful',
+            'increíble': 'amazing',
+            'horrible': 'horrible',
+            'fantástico': 'fantastic',
+            'perfecto': 'perfect',
+            'desastre': 'disaster',
+            'amor': 'love',
+            'odio': 'hate',
+            'feliz': 'happy',
+            'triste': 'sad',
+            'positivo': 'positive',
+            'negativo': 'negative'
+        }
+
+        texto_traducido = texto.lower()
+        for es, en in traducciones.items():
+            texto_traducido = texto_traducido.replace(es, en)
+
+        return texto_traducido
 
     def _clasificar_sentimiento(self, score: float) -> str:
         """Clasifica el sentimiento basado en el score"""
@@ -402,17 +428,18 @@ class AnalizadorTextoAvanzado:
             'trigramas': trigramas,
             'sentimientos': sentimientos,
             'entidades': entidades,
-            'legibilidad': legibilidad,
-            'resumen_ejecutivo': self._generar_resumen_ejecutivo()
+            'legibilidad': legibilidad
         }
+
+        # Generar resumen ejecutivo después de tener todos los datos
+        self.resultados['resumen_ejecutivo'] = self._generar_resumen_ejecutivo()
 
         print("Análisis completado!")
         return self.resultados
 
     def _generar_resumen_ejecutivo(self) -> Dict:
         """Genera un resumen ejecutivo de los resultados"""
-        if not hasattr(self, 'resultados') or not self.resultados:
-            # Usar datos temporales durante la construcción
+        if not self.resultados:
             return {
                 'total_palabras': 0,
                 'palabras_unicas': 0,
@@ -422,21 +449,22 @@ class AnalizadorTextoAvanzado:
                 'temas_principales': []
             }
 
+        tokens = self.resultados.get('tokenizacion', {})
+        frecuencias = self.resultados.get('frecuencias', {})
+        legibilidad = self.resultados.get('legibilidad', {})
+
         return {
-            'total_palabras': self.resultados.get('tokenizacion', {}).get('total_palabras', 0),
-            'palabras_unicas': len(set(self.resultados.get('tokenizacion', {}).get('palabras_filtradas', []))),
-            'diversidad_lexica': self.resultados.get('frecuencias', {}).get('diversidad_lexica', 0),
+            'total_palabras': tokens.get('total_palabras', 0),
+            'palabras_unicas': frecuencias.get('palabras_unicas', 0),
+            'diversidad_lexica': frecuencias.get('diversidad_lexica', 0),
             'sentimiento_general': self._obtener_sentimiento_predominante(),
-            'complejidad': self.resultados.get('legibilidad', {}).get('nivel_dificultad', 'N/A'),
+            'complejidad': legibilidad.get('nivel_dificultad', 'N/A'),
             'temas_principales': [palabra for palabra, freq in
-                                  self.resultados.get('frecuencias', {}).get('mas_frecuentes', [])[:5]]
+                                  frecuencias.get('mas_frecuentes', [])[:5]]
         }
 
     def _obtener_sentimiento_predominante(self) -> str:
         """Obtiene el sentimiento predominante del texto"""
-        if not hasattr(self, 'resultados') or not self.resultados:
-            return 'No determinado'
-
         sentimientos = self.resultados.get('sentimientos', {})
         if 'textblob' in sentimientos:
             return sentimientos['textblob']['clasificacion']
@@ -457,109 +485,131 @@ class AnalizadorTextoAvanzado:
 
         print("Generando visualizaciones...")
 
-        # Configurar subplot
-        fig = make_subplots(
-            rows=3, cols=2,
-            subplot_titles=[
-                'Top 15 Palabras Más Frecuentes',
-                'Distribución de Sentimientos',
-                'Longitud de Oraciones',
-                'Bigramas Más Comunes',
-                'Nube de Palabras',
-                'Métricas de Complejidad'
-            ],
-            specs=[
-                [{"type": "bar"}, {"type": "pie"}],
-                [{"type": "histogram"}, {"type": "bar"}],
-                [{"colspan": 2}, None],
-                [{"type": "indicator"}, None]
-            ]
-        )
-
-        # 1. Palabras más frecuentes
-        freq_data = self.resultados['frecuencias']['mas_frecuentes'][:15]
-        palabras = [item[0] for item in freq_data]
-        frecuencias = [item[1] for item in freq_data]
-
-        fig.add_trace(
-            go.Bar(x=frecuencias, y=palabras, orientation='h', name='Frecuencia'),
-            row=1, col=1
-        )
-
-        # 2. Sentimientos
-        if 'textblob' in self.resultados['sentimientos']:
-            sent_data = self.resultados['sentimientos']['textblob']
-            fig.add_trace(
-                go.Pie(
-                    labels=['Positivo', 'Neutral', 'Negativo'],
-                    values=[
-                        max(0, sent_data['polaridad']),
-                        1 - abs(sent_data['polaridad']),
-                        max(0, -sent_data['polaridad'])
-                    ]
-                ),
-                row=1, col=2
+        try:
+            # Configurar subplot con especificaciones corregidas
+            fig = make_subplots(
+                rows=3, cols=2,
+                subplot_titles=[
+                    'Top 15 Palabras Más Frecuentes',
+                    'Distribución de Sentimientos',
+                    'Longitud de Oraciones',
+                    'Bigramas Más Comunes',
+                    'Nube de Palabras',
+                    'Métricas de Complejidad'
+                ],
+                specs=[
+                    [{"type": "bar"}, {"type": "pie"}],
+                    [{"type": "histogram"}, {"type": "bar"}],
+                    [{"colspan": 2}, None]
+                ]
             )
 
-        # 3. Longitud de oraciones
-        oraciones = self.resultados['tokenizacion']['oraciones']
-        longitudes = [len(oracion.split()) for oracion in oraciones]
+            # 1. Palabras más frecuentes
+            if 'frecuencias' in self.resultados and 'mas_frecuentes' in self.resultados['frecuencias']:
+                freq_data = self.resultados['frecuencias']['mas_frecuentes'][:15]
+                if freq_data:
+                    palabras = [item[0] for item in freq_data]
+                    frecuencias = [item[1] for item in freq_data]
 
-        fig.add_trace(
-            go.Histogram(x=longitudes, nbinsx=20, name='Distribución'),
-            row=2, col=1
-        )
+                    fig.add_trace(
+                        go.Bar(x=frecuencias, y=palabras, orientation='h', name='Frecuencia'),
+                        row=1, col=1
+                    )
 
-        # 4. Bigramas
-        bigramas_data = self.resultados['bigramas'][:10]
-        if bigramas_data:
-            bigrama_labels = [' '.join(bigrama[0]) for bigrama in bigramas_data]
-            bigrama_values = [bigrama[1] for bigrama in bigramas_data]
+            # 2. Sentimientos
+            if 'sentimientos' in self.resultados and 'textblob' in self.resultados['sentimientos']:
+                sent_data = self.resultados['sentimientos']['textblob']
+                polaridad = sent_data['polaridad']
 
-            fig.add_trace(
-                go.Bar(x=bigrama_values, y=bigrama_labels, orientation='h'),
-                row=2, col=2
+                # Crear valores para el gráfico de pie
+                pos_val = max(0, polaridad)
+                neg_val = max(0, -polaridad)
+                neu_val = max(0.1, 1 - abs(polaridad))  # Mínimo 0.1 para visualización
+
+                fig.add_trace(
+                    go.Pie(
+                        labels=['Positivo', 'Neutral', 'Negativo'],
+                        values=[pos_val, neu_val, neg_val],
+                        name="Sentimientos"
+                    ),
+                    row=1, col=2
+                )
+
+            # 3. Longitud de oraciones
+            if 'tokenizacion' in self.resultados:
+                oraciones = self.resultados['tokenizacion']['oraciones']
+                if oraciones:
+                    longitudes = [len(oracion.split()) for oracion in oraciones]
+
+                    fig.add_trace(
+                        go.Histogram(x=longitudes, nbinsx=20, name='Distribución'),
+                        row=2, col=1
+                    )
+
+            # 4. Bigramas
+            if 'bigramas' in self.resultados:
+                bigramas_data = self.resultados['bigramas'][:10]
+                if bigramas_data:
+                    bigrama_labels = [' '.join(bigrama[0]) for bigrama in bigramas_data]
+                    bigrama_values = [bigrama[1] for bigrama in bigramas_data]
+
+                    fig.add_trace(
+                        go.Bar(x=bigrama_values, y=bigrama_labels, orientation='h', name='Bigramas'),
+                        row=2, col=2
+                    )
+
+            # Actualizar layout
+            fig.update_layout(
+                height=1000,
+                title_text="Dashboard de Análisis de Texto",
+                showlegend=False
             )
 
-        # Actualizar layout
-        fig.update_layout(
-            height=1200,
-            title_text="Dashboard de Análisis de Texto",
-            showlegend=False
-        )
+            # Mostrar gráfico
+            fig.show()
 
-        # Mostrar gráfico
-        fig.show()
+            # Generar nube de palabras
+            self._generar_nube_palabras(guardar)
 
-        # Generar nube de palabras
-        self._generar_nube_palabras(guardar)
+            if guardar:
+                fig.write_html("dashboard_analisis_texto.html")
+                print("Visualizaciones guardadas en 'dashboard_analisis_texto.html'")
 
-        if guardar:
-            fig.write_html("dashboard_analisis_texto.html")
-            print("Visualizaciones guardadas en 'dashboard_analisis_texto.html'")
+        except Exception as e:
+            print(f"Error generando visualizaciones: {e}")
 
     def _generar_nube_palabras(self, guardar: bool = True):
         """Genera nube de palabras"""
-        palabras_filtradas = self.resultados['tokenizacion']['palabras_filtradas']
-        texto_nube = ' '.join(palabras_filtradas)
+        try:
+            if 'tokenizacion' not in self.resultados:
+                return
 
-        wordcloud = WordCloud(
-            width=800, height=400,
-            background_color='white',
-            max_words=100,
-            colormap='viridis'
-        ).generate(texto_nube)
+            palabras_filtradas = self.resultados['tokenizacion']['palabras_filtradas']
+            if not palabras_filtradas:
+                print("No hay palabras suficientes para generar nube de palabras")
+                return
 
-        plt.figure(figsize=(12, 6))
-        plt.imshow(wordcloud, interpolation='bilinear')
-        plt.axis('off')
-        plt.title('Nube de Palabras', fontsize=16, fontweight='bold')
+            texto_nube = ' '.join(palabras_filtradas)
 
-        if guardar:
-            plt.savefig('nube_palabras.png', dpi=300, bbox_inches='tight')
-            print("Nube de palabras guardada en 'nube_palabras.png'")
+            wordcloud = WordCloud(
+                width=800, height=400,
+                background_color='white',
+                max_words=100,
+                colormap='viridis'
+            ).generate(texto_nube)
 
-        plt.show()
+            plt.figure(figsize=(12, 6))
+            plt.imshow(wordcloud, interpolation='bilinear')
+            plt.axis('off')
+            plt.title('Nube de Palabras', fontsize=16, fontweight='bold')
+
+            if guardar:
+                plt.savefig('nube_palabras.png', dpi=300, bbox_inches='tight')
+                print("Nube de palabras guardada en 'nube_palabras.png'")
+
+            plt.show()
+        except Exception as e:
+            print(f"Error generando nube de palabras: {e}")
 
     def generar_reporte_completo(self, formato: str = 'html') -> str:
         """
@@ -591,6 +641,11 @@ class AnalizadorTextoAvanzado:
         """Genera reporte en formato HTML"""
         filename = f"reporte_analisis_{timestamp}.html"
 
+        resumen = self.resultados.get('resumen_ejecutivo', {})
+        frecuencias = self.resultados.get('frecuencias', {})
+        sentimientos = self.resultados.get('sentimientos', {})
+        legibilidad = self.resultados.get('legibilidad', {})
+
         html_content = f"""
         <!DOCTYPE html>
         <html>
@@ -610,25 +665,25 @@ class AnalizadorTextoAvanzado:
             <div class="header">
                 <h1>Reporte de Análisis de Texto</h1>
                 <p><strong>Fecha:</strong> {pd.Timestamp.now().strftime("%d/%m/%Y %H:%M")}</p>
-                <p><strong>Longitud del texto:</strong> {len(self.resultados['texto_original'])} caracteres</p>
+                <p><strong>Longitud del texto:</strong> {len(self.resultados.get('texto_original', ''))} caracteres</p>
             </div>
 
             <div class="section">
                 <h2>Resumen Ejecutivo</h2>
                 <div class="metric">
-                    <strong>Palabras totales:</strong> {self.resultados['resumen_ejecutivo']['total_palabras']}
+                    <strong>Palabras totales:</strong> {resumen.get('total_palabras', 'N/A')}
                 </div>
                 <div class="metric">
-                    <strong>Palabras únicas:</strong> {self.resultados['resumen_ejecutivo']['palabras_unicas']}
+                    <strong>Palabras únicas:</strong> {resumen.get('palabras_unicas', 'N/A')}
                 </div>
                 <div class="metric">
-                    <strong>Diversidad léxica:</strong> {self.resultados['resumen_ejecutivo']['diversidad_lexica']}
+                    <strong>Diversidad léxica:</strong> {resumen.get('diversidad_lexica', 'N/A')}
                 </div>
                 <div class="metric">
-                    <strong>Sentimiento:</strong> {self.resultados['resumen_ejecutivo']['sentimiento_general']}
+                    <strong>Sentimiento:</strong> {resumen.get('sentimiento_general', 'N/A')}
                 </div>
                 <div class="metric">
-                    <strong>Complejidad:</strong> {self.resultados['resumen_ejecutivo']['complejidad']}
+                    <strong>Complejidad:</strong> {resumen.get('complejidad', 'N/A')}
                 </div>
             </div>
 
@@ -639,7 +694,8 @@ class AnalizadorTextoAvanzado:
                     <tr><th>Palabra</th><th>Frecuencia</th></tr>
         """
 
-        for palabra, freq in self.resultados['frecuencias']['mas_frecuentes'][:10]:
+        mas_frecuentes = frecuencias.get('mas_frecuentes', [])
+        for palabra, freq in mas_frecuentes[:10]:
             html_content += f"<tr><td>{palabra}</td><td>{freq}</td></tr>"
 
         html_content += """
@@ -650,8 +706,8 @@ class AnalizadorTextoAvanzado:
                 <h2>Análisis de Sentimientos</h2>
         """
 
-        if 'textblob' in self.resultados['sentimientos']:
-            sent = self.resultados['sentimientos']['textblob']
+        if 'textblob' in sentimientos:
+            sent = sentimientos['textblob']
             html_content += f"""
                 <p><strong>Polaridad:</strong> {sent['polaridad']} ({sent['clasificacion']})</p>
                 <p><strong>Subjetividad:</strong> {sent['subjetividad']}</p>
@@ -664,12 +720,11 @@ class AnalizadorTextoAvanzado:
                 <h2>Métricas de Legibilidad</h2>
         """
 
-        leg = self.resultados['legibilidad']
         html_content += f"""
-                <p><strong>Oraciones:</strong> {leg.get('oraciones', 'N/A')}</p>
-                <p><strong>Palabras por oración:</strong> {leg.get('palabras_por_oracion', 'N/A')}</p>
-                <p><strong>Caracteres por palabra:</strong> {leg.get('caracteres_por_palabra', 'N/A')}</p>
-                <p><strong>Nivel de dificultad:</strong> {leg.get('nivel_dificultad', 'N/A')}</p>
+                <p><strong>Oraciones:</strong> {legibilidad.get('oraciones', 'N/A')}</p>
+                <p><strong>Palabras por oración:</strong> {legibilidad.get('palabras_por_oracion', 'N/A')}</p>
+                <p><strong>Caracteres por palabra:</strong> {legibilidad.get('caracteres_por_palabra', 'N/A')}</p>
+                <p><strong>Nivel de dificultad:</strong> {legibilidad.get('nivel_dificultad', 'N/A')}</p>
         """
 
         html_content += """
@@ -694,12 +749,13 @@ class AnalizadorTextoAvanzado:
             if key != 'frecuencias':  # FreqDist no es serializable
                 resultados_json[key] = value
             else:
-                resultados_json[key] = {
-                    'mas_frecuentes': value['mas_frecuentes'],
-                    'total_palabras': value['total_palabras'],
-                    'palabras_unicas': value['palabras_unicas'],
-                    'diversidad_lexica': value['diversidad_lexica']
-                }
+                if isinstance(value, dict):
+                    resultados_json[key] = {
+                        'mas_frecuentes': value.get('mas_frecuentes', []),
+                        'total_palabras': value.get('total_palabras', 0),
+                        'palabras_unicas': value.get('palabras_unicas', 0),
+                        'diversidad_lexica': value.get('diversidad_lexica', 0)
+                    }
 
         with open(filename, 'w', encoding='utf-8') as f:
             json.dump(resultados_json, f, ensure_ascii=False, indent=2)
@@ -717,12 +773,12 @@ class AnalizadorTextoAvanzado:
             f.write("=" * 60 + "\n\n")
 
             f.write(f"Fecha: {pd.Timestamp.now().strftime('%d/%m/%Y %H:%M')}\n")
-            f.write(f"Longitud del texto: {len(self.resultados['texto_original'])} caracteres\n\n")
+            f.write(f"Longitud del texto: {len(self.resultados.get('texto_original', ''))} caracteres\n\n")
 
             # Resumen ejecutivo
             f.write("RESUMEN EJECUTIVO\n")
             f.write("-" * 20 + "\n")
-            resumen = self.resultados['resumen_ejecutivo']
+            resumen = self.resultados.get('resumen_ejecutivo', {})
             for key, value in resumen.items():
                 f.write(f"{key.replace('_', ' ').title()}: {value}\n")
             f.write("\n")
@@ -730,15 +786,18 @@ class AnalizadorTextoAvanzado:
             # Palabras más frecuentes
             f.write("TOP 15 PALABRAS MÁS FRECUENTES\n")
             f.write("-" * 35 + "\n")
-            for i, (palabra, freq) in enumerate(self.resultados['frecuencias']['mas_frecuentes'][:15], 1):
+            frecuencias = self.resultados.get('frecuencias', {})
+            mas_frecuentes = frecuencias.get('mas_frecuentes', [])
+            for i, (palabra, freq) in enumerate(mas_frecuentes[:15], 1):
                 f.write(f"{i:2d}. {palabra:<20} {freq:>3d}\n")
             f.write("\n")
 
             # Sentimientos
             f.write("ANÁLISIS DE SENTIMIENTOS\n")
             f.write("-" * 25 + "\n")
-            if 'textblob' in self.resultados['sentimientos']:
-                sent = self.resultados['sentimientos']['textblob']
+            sentimientos = self.resultados.get('sentimientos', {})
+            if 'textblob' in sentimientos:
+                sent = sentimientos['textblob']
                 f.write(f"Polaridad: {sent['polaridad']} ({sent['clasificacion']})\n")
                 f.write(f"Subjetividad: {sent['subjetividad']}\n")
             f.write("\n")
@@ -746,15 +805,17 @@ class AnalizadorTextoAvanzado:
             # Legibilidad
             f.write("MÉTRICAS DE LEGIBILIDAD\n")
             f.write("-" * 25 + "\n")
-            leg = self.resultados['legibilidad']
+            leg = self.resultados.get('legibilidad', {})
             for key, value in leg.items():
-                f.write(f"{key.replace('_', ' ').title()}: {value}\n")
+                if key != 'error':
+                    f.write(f"{key.replace('_', ' ').title()}: {value}\n")
             f.write("\n")
 
             # Bigramas
             f.write("TOP 10 BIGRAMAS\n")
             f.write("-" * 15 + "\n")
-            for i, (bigrama, freq) in enumerate(self.resultados['bigramas'][:10], 1):
+            bigramas = self.resultados.get('bigramas', [])
+            for i, (bigrama, freq) in enumerate(bigramas[:10], 1):
                 f.write(f"{i:2d}. {' '.join(bigrama):<25} {freq:>3d}\n")
 
         print(f"Reporte TXT generado: {filename}")
@@ -852,12 +913,12 @@ def comparar_textos(textos: Dict[str, str]) -> Dict:
 
     # Extraer métricas de cada texto
     for nombre, resultado in resultados_comparacion.items():
-        resumen = resultado['resumen_ejecutivo']
+        resumen = resultado.get('resumen_ejecutivo', {})
         comparacion['metricas_por_texto'][nombre] = {
-            'palabras_totales': resumen['total_palabras'],
-            'diversidad_lexica': resumen['diversidad_lexica'],
-            'sentimiento': resumen['sentimiento_general'],
-            'complejidad': resumen['complejidad']
+            'palabras_totales': resumen.get('total_palabras', 0),
+            'diversidad_lexica': resumen.get('diversidad_lexica', 0),
+            'sentimiento': resumen.get('sentimiento_general', 'N/A'),
+            'complejidad': resumen.get('complejidad', 'N/A')
         }
 
     # Crear rankings
@@ -885,7 +946,8 @@ def comparar_textos(textos: Dict[str, str]) -> Dict:
     # Encontrar palabras comunes
     todas_las_palabras = []
     for resultado in resultados_comparacion.values():
-        palabras_frecuentes = [palabra for palabra, _ in resultado['frecuencias']['mas_frecuentes'][:10]]
+        frecuencias = resultado.get('frecuencias', {})
+        palabras_frecuentes = [palabra for palabra, _ in frecuencias.get('mas_frecuentes', [])[:10]]
         todas_las_palabras.extend(palabras_frecuentes)
 
     contador_palabras = Counter(todas_las_palabras)
@@ -962,14 +1024,15 @@ def _generar_reporte_comparativo_html(resultados: Dict, timestamp: str) -> str:
     """
 
     # Añadir filas de la tabla
-    for nombre, metricas in resultados['analisis_comparativo']['metricas_por_texto'].items():
+    metricas = resultados.get('analisis_comparativo', {}).get('metricas_por_texto', {})
+    for nombre, datos in metricas.items():
         html_content += f"""
                 <tr>
                     <td>{nombre}</td>
-                    <td>{metricas['palabras_totales']}</td>
-                    <td>{metricas['diversidad_lexica']:.4f}</td>
-                    <td>{metricas['sentimiento']}</td>
-                    <td>{metricas['complejidad']}</td>
+                    <td>{datos.get('palabras_totales', 0)}</td>
+                    <td>{datos.get('diversidad_lexica', 0):.4f}</td>
+                    <td>{datos.get('sentimiento', 'N/A')}</td>
+                    <td>{datos.get('complejidad', 'N/A')}</td>
                 </tr>
         """
 
@@ -985,8 +1048,9 @@ def _generar_reporte_comparativo_html(resultados: Dict, timestamp: str) -> str:
     """
 
     # Ranking de complejidad
-    for nombre, metricas in resultados['analisis_comparativo']['ranking_complejidad']:
-        html_content += f"<li>{nombre} - {metricas['complejidad']}</li>"
+    ranking_complejidad = resultados.get('analisis_comparativo', {}).get('ranking_complejidad', [])
+    for nombre, metricas in ranking_complejidad:
+        html_content += f"<li>{nombre} - {metricas.get('complejidad', 'N/A')}</li>"
 
     html_content += """
                 </ol>
@@ -998,8 +1062,9 @@ def _generar_reporte_comparativo_html(resultados: Dict, timestamp: str) -> str:
     """
 
     # Ranking de diversidad
-    for nombre, metricas in resultados['analisis_comparativo']['ranking_diversidad']:
-        html_content += f"<li>{nombre} - {metricas['diversidad_lexica']:.4f}</li>"
+    ranking_diversidad = resultados.get('analisis_comparativo', {}).get('ranking_diversidad', [])
+    for nombre, metricas in ranking_diversidad:
+        html_content += f"<li>{nombre} - {metricas.get('diversidad_lexica', 0):.4f}</li>"
 
     html_content += """
                 </ol>
@@ -1009,7 +1074,7 @@ def _generar_reporte_comparativo_html(resultados: Dict, timestamp: str) -> str:
         <div class="section">
             <h2>Palabras Comunes</h2>
             <p>Palabras que aparecen frecuentemente en múltiples textos:</p>
-            <p>""" + ", ".join(resultados['analisis_comparativo']['palabras_comunes']) + """</p>
+            <p>""" + ", ".join(resultados.get('analisis_comparativo', {}).get('palabras_comunes', [])) + """</p>
         </div>
     </body>
     </html>
@@ -1032,33 +1097,36 @@ def _generar_reporte_comparativo_txt(resultados: Dict, timestamp: str) -> str:
         f.write("=" * 60 + "\n\n")
 
         f.write(f"Fecha: {pd.Timestamp.now().strftime('%d/%m/%Y %H:%M')}\n")
-        f.write(f"Textos analizados: {len(resultados['analisis_comparativo']['metricas_por_texto'])}\n\n")
+        metricas = resultados.get('analisis_comparativo', {}).get('metricas_por_texto', {})
+        f.write(f"Textos analizados: {len(metricas)}\n\n")
 
         # Resumen por texto
         f.write("RESUMEN POR TEXTO\n")
         f.write("-" * 20 + "\n")
-        for nombre, metricas in resultados['analisis_comparativo']['metricas_por_texto'].items():
+        for nombre, datos in metricas.items():
             f.write(f"\n{nombre}:\n")
-            f.write(f"  Palabras totales: {metricas['palabras_totales']}\n")
-            f.write(f"  Diversidad léxica: {metricas['diversidad_lexica']:.4f}\n")
-            f.write(f"  Sentimiento: {metricas['sentimiento']}\n")
-            f.write(f"  Complejidad: {metricas['complejidad']}\n")
+            f.write(f"  Palabras totales: {datos.get('palabras_totales', 0)}\n")
+            f.write(f"  Diversidad léxica: {datos.get('diversidad_lexica', 0):.4f}\n")
+            f.write(f"  Sentimiento: {datos.get('sentimiento', 'N/A')}\n")
+            f.write(f"  Complejidad: {datos.get('complejidad', 'N/A')}\n")
 
         # Rankings
         f.write("\n\nRANKING POR COMPLEJIDAD\n")
         f.write("-" * 25 + "\n")
-        for i, (nombre, metricas) in enumerate(resultados['analisis_comparativo']['ranking_complejidad'], 1):
-            f.write(f"{i}. {nombre} - {metricas['complejidad']}\n")
+        ranking_comp = resultados.get('analisis_comparativo', {}).get('ranking_complejidad', [])
+        for i, (nombre, datos) in enumerate(ranking_comp, 1):
+            f.write(f"{i}. {nombre} - {datos.get('complejidad', 'N/A')}\n")
 
         f.write("\n\nRANKING POR DIVERSIDAD LÉXICA\n")
         f.write("-" * 30 + "\n")
-        for i, (nombre, metricas) in enumerate(resultados['analisis_comparativo']['ranking_diversidad'], 1):
-            f.write(f"{i}. {nombre} - {metricas['diversidad_lexica']:.4f}\n")
+        ranking_div = resultados.get('analisis_comparativo', {}).get('ranking_diversidad', [])
+        for i, (nombre, datos) in enumerate(ranking_div, 1):
+            f.write(f"{i}. {nombre} - {datos.get('diversidad_lexica', 0):.4f}\n")
 
         # Palabras comunes
         f.write("\n\nPALABRAS COMUNES\n")
         f.write("-" * 15 + "\n")
-        palabras_comunes = resultados['analisis_comparativo']['palabras_comunes']
+        palabras_comunes = resultados.get('analisis_comparativo', {}).get('palabras_comunes', [])
         if palabras_comunes:
             f.write(", ".join(palabras_comunes) + "\n")
         else:
@@ -1076,13 +1144,13 @@ def _generar_reporte_comparativo_json(resultados: Dict, timestamp: str) -> str:
     datos_json = {
         'metadatos': {
             'fecha_generacion': pd.Timestamp.now().isoformat(),
-            'textos_analizados': len(resultados['analisis_comparativo']['metricas_por_texto'])
+            'textos_analizados': len(resultados.get('analisis_comparativo', {}).get('metricas_por_texto', {}))
         },
-        'analisis_comparativo': resultados['analisis_comparativo']
+        'analisis_comparativo': resultados.get('analisis_comparativo', {})
     }
 
     # Convertir conjuntos a listas para JSON
-    if isinstance(datos_json['analisis_comparativo']['palabras_comunes'], set):
+    if isinstance(datos_json['analisis_comparativo'].get('palabras_comunes'), set):
         datos_json['analisis_comparativo']['palabras_comunes'] = list(
             datos_json['analisis_comparativo']['palabras_comunes']
         )
