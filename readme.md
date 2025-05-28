@@ -1,6 +1,9 @@
-# Analizador de Texto Avanzado
+# Bootcamp en Inteligencia artificial (Talento Tech)
+# Nivel: Explorador - Básico-2025-5-L2-G47
+# Realizado por: Víctor C. Vladimir Cortés A.
+# Descripción del Proyecto:
 
-Un sistema completo de análisis de texto en español con múltiples funcionalidades avanzadas.
+Analizador de Texto Avanzado, Un sistema completo de análisis de texto en español con múltiples funcionalidades avanzadas.
 
 ## Características Principales
 
