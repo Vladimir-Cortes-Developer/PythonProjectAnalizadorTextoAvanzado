@@ -1,0 +1,60 @@
+============================================================
+REPORTE DE ANÁLISIS DE TEXTO
+============================================================
+
+Fecha: 28/05/2025 17:50
+Longitud del texto: 1073 caracteres
+
+RESUMEN EJECUTIVO
+--------------------
+Total Palabras: 146
+Palabras Unicas: 71
+Diversidad Lexica: 0.9103
+Sentimiento General: Negativo
+Complejidad: Muy fácil
+Temas Principales: ['inteligencia', 'artificial', 'máquinas', 'tecnología', 'importantes']
+
+TOP 15 PALABRAS MÁS FRECUENTES
+-----------------------------------
+ 1. inteligencia           2
+ 2. artificial             2
+ 3. máquinas               2
+ 4. tecnología             2
+ 5. importantes            2
+ 6. futuro                 2
+ 7. humanos                2
+ 8. revolucionando         1
+ 9. mundo                  1
+10. moderno                1
+11. algoritmos             1
+12. machine                1
+13. learning               1
+14. permiten               1
+15. aprender               1
+
+ANÁLISIS DE SENTIMIENTOS
+-------------------------
+Polaridad: -0.4 (Negativo)
+Subjetividad: 1.0
+
+MÉTRICAS DE LEGIBILIDAD
+-------------------------
+Oraciones: 9
+Palabras: 133
+Palabras Por Oracion: 14.78
+Caracteres Por Palabra: 6.41
+Indice Complejidad: 21.93
+Nivel Dificultad: Muy fácil
+
+TOP 10 BIGRAMAS
+---------------
+ 1. inteligencia artificial     2
+ 2. artificial revolucionando   1
+ 3. revolucionando mundo        1
+ 4. mundo moderno               1
+ 5. moderno algoritmos          1
+ 6. algoritmos machine          1
+ 7. machine learning            1
+ 8. learning permiten           1
+ 9. permiten máquinas           1
+10. máquinas aprender           1

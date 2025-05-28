@@ -1,0 +1,558 @@
+{
+  "texto_original": "\n    La inteligencia artificial está revolucionando el mundo moderno. \n    Los algoritmos de machine learning permiten a las máquinas aprender \n    de grandes volúmenes de datos sin ser programadas explícitamente. \n    Esta tecnología tiene aplicaciones en medicina, finanzas, educación \n    y muchos otros campos importantes. Sin embargo, también plantea desafíos éticos \n    importantes que debemos considerar cuidadosamente.\n\n    El futuro de la IA depende de cómo desarrollemos estas tecnologías \n    de manera responsable. Es crucial que mantengamos un equilibrio \n    entre la innovación y la protección de los derechos humanos.\n\n    Los sistemas de inteligencia artificial pueden procesar información\n    a velocidades que superan las capacidades humanas, pero requieren\n    supervisión constante para evitar sesgos y errores. La colaboración\n    entre humanos y máquinas será fundamental para el progreso futuro.\n\n    Esta tecnología revolucionaria está transformando sectores completos\n    y creando nuevas oportunidades de desarrollo profesional y económico.\n    ",
+  "texto_limpio": "la inteligencia artificial está revolucionando el mundo moderno. los algoritmos de machine learning permiten a las máquinas aprender de grandes volúmenes de datos sin ser programadas explícitamente. esta tecnología tiene aplicaciones en medicina, finanzas, educación y muchos otros campos importantes. sin embargo, también plantea desafíos éticos importantes que debemos considerar cuidadosamente. el futuro de la ia depende de cómo desarrollemos estas tecnologías de manera responsable. es crucial que mantengamos un equilibrio entre la innovación y la protección de los derechos humanos. los sistemas de inteligencia artificial pueden procesar información a velocidades que superan las capacidades humanas, pero requieren supervisión constante para evitar sesgos y errores. la colaboración entre humanos y máquinas será fundamental para el progreso futuro. esta tecnología revolucionaria está transformando sectores completos y creando nuevas oportunidades de desarrollo profesional y económico.",
+  "tokenizacion": {
+    "oraciones": [
+      "la inteligencia artificial está revolucionando el mundo moderno.",
+      "los algoritmos de machine learning permiten a las máquinas aprender de grandes volúmenes de datos sin ser programadas explícitamente.",
+      "esta tecnología tiene aplicaciones en medicina, finanzas, educación y muchos otros campos importantes.",
+      "sin embargo, también plantea desafíos éticos importantes que debemos considerar cuidadosamente.",
+      "el futuro de la ia depende de cómo desarrollemos estas tecnologías de manera responsable.",
+      "es crucial que mantengamos un equilibrio entre la innovación y la protección de los derechos humanos.",
+      "los sistemas de inteligencia artificial pueden procesar información a velocidades que superan las capacidades humanas, pero requieren supervisión constante para evitar sesgos y errores.",
+      "la colaboración entre humanos y máquinas será fundamental para el progreso futuro.",
+      "esta tecnología revolucionaria está transformando sectores completos y creando nuevas oportunidades de desarrollo profesional y económico."
+    ],
+    "palabras_todas": [
+      "la",
+      "inteligencia",
+      "artificial",
+      "está",
+      "revolucionando",
+      "el",
+      "mundo",
+      "moderno",
+      ".",
+      "los",
+      "algoritmos",
+      "de",
+      "machine",
+      "learning",
+      "permiten",
+      "a",
+      "las",
+      "máquinas",
+      "aprender",
+      "de",
+      "grandes",
+      "volúmenes",
+      "de",
+      "datos",
+      "sin",
+      "ser",
+      "programadas",
+      "explícitamente",
+      ".",
+      "esta",
+      "tecnología",
+      "tiene",
+      "aplicaciones",
+      "en",
+      "medicina",
+      ",",
+      "finanzas",
+      ",",
+      "educación",
+      "y",
+      "muchos",
+      "otros",
+      "campos",
+      "importantes",
+      ".",
+      "sin",
+      "embargo",
+      ",",
+      "también",
+      "plantea",
+      "desafíos",
+      "éticos",
+      "importantes",
+      "que",
+      "debemos",
+      "considerar",
+      "cuidadosamente",
+      ".",
+      "el",
+      "futuro",
+      "de",
+      "la",
+      "ia",
+      "depende",
+      "de",
+      "cómo",
+      "desarrollemos",
+      "estas",
+      "tecnologías",
+      "de",
+      "manera",
+      "responsable",
+      ".",
+      "es",
+      "crucial",
+      "que",
+      "mantengamos",
+      "un",
+      "equilibrio",
+      "entre",
+      "la",
+      "innovación",
+      "y",
+      "la",
+      "protección",
+      "de",
+      "los",
+      "derechos",
+      "humanos",
+      ".",
+      "los",
+      "sistemas",
+      "de",
+      "inteligencia",
+      "artificial",
+      "pueden",
+      "procesar",
+      "información",
+      "a",
+      "velocidades",
+      "que",
+      "superan",
+      "las",
+      "capacidades",
+      "humanas",
+      ",",
+      "pero",
+      "requieren",
+      "supervisión",
+      "constante",
+      "para",
+      "evitar",
+      "sesgos",
+      "y",
+      "errores",
+      ".",
+      "la",
+      "colaboración",
+      "entre",
+      "humanos",
+      "y",
+      "máquinas",
+      "será",
+      "fundamental",
+      "para",
+      "el",
+      "progreso",
+      "futuro",
+      ".",
+      "esta",
+      "tecnología",
+      "revolucionaria",
+      "está",
+      "transformando",
+      "sectores",
+      "completos",
+      "y",
+      "creando",
+      "nuevas",
+      "oportunidades",
+      "de",
+      "desarrollo",
+      "profesional",
+      "y",
+      "económico",
+      "."
+    ],
+    "palabras_filtradas": [
+      "inteligencia",
+      "artificial",
+      "revolucionando",
+      "mundo",
+      "moderno",
+      "algoritmos",
+      "machine",
+      "learning",
+      "permiten",
+      "máquinas",
+      "aprender",
+      "grandes",
+      "volúmenes",
+      "datos",
+      "programadas",
+      "explícitamente",
+      "tecnología",
+      "aplicaciones",
+      "medicina",
+      "finanzas",
+      "educación",
+      "campos",
+      "importantes",
+      "embargo",
+      "plantea",
+      "desafíos",
+      "éticos",
+      "importantes",
+      "debemos",
+      "considerar",
+      "cuidadosamente",
+      "futuro",
+      "depende",
+      "cómo",
+      "desarrollemos",
+      "tecnologías",
+      "manera",
+      "responsable",
+      "crucial",
+      "mantengamos",
+      "equilibrio",
+      "innovación",
+      "protección",
+      "derechos",
+      "humanos",
+      "sistemas",
+      "inteligencia",
+      "artificial",
+      "pueden",
+      "procesar",
+      "información",
+      "velocidades",
+      "superan",
+      "capacidades",
+      "humanas",
+      "requieren",
+      "supervisión",
+      "constante",
+      "evitar",
+      "sesgos",
+      "errores",
+      "colaboración",
+      "humanos",
+      "máquinas",
+      "fundamental",
+      "progreso",
+      "futuro",
+      "tecnología",
+      "revolucionaria",
+      "transformando",
+      "sectores",
+      "completos",
+      "creando",
+      "nuevas",
+      "oportunidades",
+      "desarrollo",
+      "profesional",
+      "económico"
+    ],
+    "total_oraciones": 9,
+    "total_palabras": 146,
+    "total_palabras_filtradas": 78
+  },
+  "frecuencias": {
+    "mas_frecuentes": [
+      [
+        "inteligencia",
+        2
+      ],
+      [
+        "artificial",
+        2
+      ],
+      [
+        "máquinas",
+        2
+      ],
+      [
+        "tecnología",
+        2
+      ],
+      [
+        "importantes",
+        2
+      ],
+      [
+        "futuro",
+        2
+      ],
+      [
+        "humanos",
+        2
+      ],
+      [
+        "revolucionando",
+        1
+      ],
+      [
+        "mundo",
+        1
+      ],
+      [
+        "moderno",
+        1
+      ],
+      [
+        "algoritmos",
+        1
+      ],
+      [
+        "machine",
+        1
+      ],
+      [
+        "learning",
+        1
+      ],
+      [
+        "permiten",
+        1
+      ],
+      [
+        "aprender",
+        1
+      ],
+      [
+        "grandes",
+        1
+      ],
+      [
+        "volúmenes",
+        1
+      ],
+      [
+        "datos",
+        1
+      ],
+      [
+        "programadas",
+        1
+      ],
+      [
+        "explícitamente",
+        1
+      ]
+    ],
+    "total_palabras": 78,
+    "palabras_unicas": 71,
+    "diversidad_lexica": 0.9103
+  },
+  "bigramas": [
+    [
+      [
+        "inteligencia",
+        "artificial"
+      ],
+      2
+    ],
+    [
+      [
+        "artificial",
+        "revolucionando"
+      ],
+      1
+    ],
+    [
+      [
+        "revolucionando",
+        "mundo"
+      ],
+      1
+    ],
+    [
+      [
+        "mundo",
+        "moderno"
+      ],
+      1
+    ],
+    [
+      [
+        "moderno",
+        "algoritmos"
+      ],
+      1
+    ],
+    [
+      [
+        "algoritmos",
+        "machine"
+      ],
+      1
+    ],
+    [
+      [
+        "machine",
+        "learning"
+      ],
+      1
+    ],
+    [
+      [
+        "learning",
+        "permiten"
+      ],
+      1
+    ],
+    [
+      [
+        "permiten",
+        "máquinas"
+      ],
+      1
+    ],
+    [
+      [
+        "máquinas",
+        "aprender"
+      ],
+      1
+    ]
+  ],
+  "trigramas": [
+    [
+      [
+        "inteligencia",
+        "artificial",
+        "revolucionando"
+      ],
+      1
+    ],
+    [
+      [
+        "artificial",
+        "revolucionando",
+        "mundo"
+      ],
+      1
+    ],
+    [
+      [
+        "revolucionando",
+        "mundo",
+        "moderno"
+      ],
+      1
+    ],
+    [
+      [
+        "mundo",
+        "moderno",
+        "algoritmos"
+      ],
+      1
+    ],
+    [
+      [
+        "moderno",
+        "algoritmos",
+        "machine"
+      ],
+      1
+    ],
+    [
+      [
+        "algoritmos",
+        "machine",
+        "learning"
+      ],
+      1
+    ],
+    [
+      [
+        "machine",
+        "learning",
+        "permiten"
+      ],
+      1
+    ],
+    [
+      [
+        "learning",
+        "permiten",
+        "máquinas"
+      ],
+      1
+    ],
+    [
+      [
+        "permiten",
+        "máquinas",
+        "aprender"
+      ],
+      1
+    ],
+    [
+      [
+        "máquinas",
+        "aprender",
+        "grandes"
+      ],
+      1
+    ]
+  ],
+  "sentimientos": {
+    "textblob": {
+      "polaridad": -0.4,
+      "subjetividad": 1.0,
+      "clasificacion": "Negativo"
+    },
+    "vader": {
+      "compuesto": -0.802,
+      "positivo": 0.0,
+      "neutral": 0.948,
+      "negativo": 0.052,
+      "clasificacion": "Negativo"
+    }
+  },
+  "entidades": {
+    "entidades_detalladas": {
+      "MISC": [
+        {
+          "texto": "Los algoritmos de machine learning",
+          "inicio": 75,
+          "fin": 109
+        },
+        {
+          "texto": "El futuro de la IA",
+          "inicio": 433,
+          "fin": 451
+        },
+        {
+          "texto": "La colaboración\n    ",
+          "inicio": 834,
+          "fin": 854
+        }
+      ],
+      "LOC": [
+        {
+          "texto": "información\n    ",
+          "inicio": 696,
+          "fin": 712
+        }
+      ]
+    },
+    "resumen": {
+      "MISC": 3,
+      "LOC": 1
+    },
+    "total_entidades": 4
+  },
+  "legibilidad": {
+    "oraciones": 9,
+    "palabras": 133,
+    "palabras_por_oracion": 14.78,
+    "caracteres_por_palabra": 6.41,
+    "indice_complejidad": 21.93,
+    "nivel_dificultad": "Muy fácil"
+  },
+  "resumen_ejecutivo": {
+    "total_palabras": 146,
+    "palabras_unicas": 71,
+    "diversidad_lexica": 0.9103,
+    "sentimiento_general": "Negativo",
+    "complejidad": "Muy fácil",
+    "temas_principales": [
+      "inteligencia",
+      "artificial",
+      "máquinas",
+      "tecnología",
+      "importantes"
+    ]
+  }
+}
