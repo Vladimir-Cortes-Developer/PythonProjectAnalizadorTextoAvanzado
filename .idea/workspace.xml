@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="004f2c67-28fc-428f-9b9a-a62e98adb987" name="Changes" comment="feat(backend): Añada stopwords personalizadas. Añana Tokenización avanzada con diferentes niveles. Añana análisis completo de frecuencias de palabras. Añada Análisis de n-gramas. añada. Análisis de sentimientos usando múltiples métodos. Añada Clasifica el sentimiento basado en el score. Añada Extracción de entidades nombradas usando spaCy. Calcula métricas de legibilidad del texto. Realiza análisis completo del texto.">
-      <change afterPath="$PROJECT_DIR$/ejemplo_uso.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="004f2c67-28fc-428f-9b9a-a62e98adb987" name="Changes" comment="feat(backend): Añada archivo ejemplo_uso.py." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -106,7 +103,7 @@
       <option name="presentableId" value="Default" />
       <updated>1748452064158</updated>
       <workItem from="1748452065223" duration="313000" />
-      <workItem from="1748459053484" duration="1113000" />
+      <workItem from="1748459053484" duration="1426000" />
     </task>
     <task id="LOCAL-00001" summary="feat(backend): Añada stopwords personalizadas. Añana Tokenización avanzada con diferentes niveles. Añana análisis completo de frecuencias de palabras. Añada Análisis de n-gramas. añada. Análisis de sentimientos usando múltiples métodos. Añada Clasifica el sentimiento basado en el score. Añada Extracción de entidades nombradas usando spaCy. Calcula métricas de legibilidad del texto. Realiza análisis completo del texto.">
       <option name="closed" value="true" />
@@ -116,7 +113,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748453735962</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat(backend): Añada archivo ejemplo_uso.py.">
+      <option name="closed" value="true" />
+      <created>1748460478719</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1748460478720</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -145,7 +150,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat(backend): Añada stopwords personalizadas. Añana Tokenización avanzada con diferentes niveles. Añana análisis completo de frecuencias de palabras. Añada Análisis de n-gramas. añada. Análisis de sentimientos usando múltiples métodos. Añada Clasifica el sentimiento basado en el score. Añada Extracción de entidades nombradas usando spaCy. Calcula métricas de legibilidad del texto. Realiza análisis completo del texto." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(backend): Añada stopwords personalizadas. Añana Tokenización avanzada con diferentes niveles. Añana análisis completo de frecuencias de palabras. Añada Análisis de n-gramas. añada. Análisis de sentimientos usando múltiples métodos. Añada Clasifica el sentimiento basado en el score. Añada Extracción de entidades nombradas usando spaCy. Calcula métricas de legibilidad del texto. Realiza análisis completo del texto." />
+    <MESSAGE value="feat(backend): Añada archivo ejemplo_uso.py." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(backend): Añada archivo ejemplo_uso.py." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -160,6 +166,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PythonProjectAnalizadorTextoAvanzado$ejemplo_uso.coverage" NAME="ejemplo_uso Coverage Results" MODIFIED="1748459173370" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/PythonProjectAnalizadorTextoAvanzado$analizador_texto_avanzado.coverage" NAME="analizador_texto_avanzado Coverage Results" MODIFIED="1748460167551" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PythonProjectAnalizadorTextoAvanzado$analizador_texto_avanzado.coverage" NAME="analizador_texto_avanzado Coverage Results" MODIFIED="1748460364752" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
