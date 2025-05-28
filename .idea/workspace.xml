@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="004f2c67-28fc-428f-9b9a-a62e98adb987" name="Changes" comment="feat(backend): adicione archivos setup.py &amp; fix_nltk.py">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analizador_texto_avanzado.py" beforeDir="false" afterPath="$PROJECT_DIR$/analizador_texto_avanzado.py" afterDir="false" />
-    </list>
+    <list default="true" id="004f2c67-28fc-428f-9b9a-a62e98adb987" name="Changes" comment="feat(backend): refactor analizador_texto_avanzado.py &amp; ejemplo_uso.py" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -107,7 +104,7 @@
       <updated>1748452064158</updated>
       <workItem from="1748452065223" duration="313000" />
       <workItem from="1748459053484" duration="5611000" />
-      <workItem from="1748468571064" duration="2273000" />
+      <workItem from="1748468571064" duration="2650000" />
     </task>
     <task id="LOCAL-00001" summary="feat(backend): Añada stopwords personalizadas. Añana Tokenización avanzada con diferentes niveles. Añana análisis completo de frecuencias de palabras. Añada Análisis de n-gramas. añada. Análisis de sentimientos usando múltiples métodos. Añada Clasifica el sentimiento basado en el score. Añada Extracción de entidades nombradas usando spaCy. Calcula métricas de legibilidad del texto. Realiza análisis completo del texto.">
       <option name="closed" value="true" />
@@ -173,7 +170,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748463513421</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="feat(backend): refactor analizador_texto_avanzado.py &amp; ejemplo_uso.py">
+      <option name="closed" value="true" />
+      <created>1748471242788</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1748471242788</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -209,7 +214,8 @@
     <MESSAGE value="feat(backend): adicione archivo inteligencia_artificial.txt" />
     <MESSAGE value="feat(backend): adicione archivo cambio_climatico.txt" />
     <MESSAGE value="feat(backend): adicione archivos setup.py &amp; fix_nltk.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(backend): adicione archivos setup.py &amp; fix_nltk.py" />
+    <MESSAGE value="feat(backend): refactor analizador_texto_avanzado.py &amp; ejemplo_uso.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(backend): refactor analizador_texto_avanzado.py &amp; ejemplo_uso.py" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -218,11 +224,6 @@
           <url>file://$PROJECT_DIR$/main.py</url>
           <line>8</line>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/analizador_texto_avanzado.py.backup</url>
-          <line>14</line>
-          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

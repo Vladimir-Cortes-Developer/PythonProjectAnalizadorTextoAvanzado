@@ -1,662 +1,392 @@
-# setup.py - Script de configuración automática completo
+#!/usr/bin/env python3
+"""
+Setup y Configuración del Analizador de Texto Avanzado - Versión Corregida
+=========================================================================
+
+Este script configura el entorno y resuelve problemas comunes del analizador.
+"""
+
 import os
-import subprocess
 import sys
-import platform
-import ssl
+import subprocess
+import importlib
+from pathlib import Path
 
 
-def configurar_ssl():
-    """Configura SSL para evitar errores de certificado"""
+def instalar_paquete(paquete, nombre_mostrar=None):
+    """
+    Instala un paquete usando pip
+
+    Args:
+        paquete: Nombre del paquete a instalar
+        nombre_mostrar: Nombre para mostrar (opcional)
+    """
+    if nombre_mostrar is None:
+        nombre_mostrar = paquete
+
     try:
-        _create_unverified_https_context = ssl._create_unverified_context
-    except AttributeError:
-        pass
-    else:
-        ssl._create_default_https_context = _create_unverified_https_context
-
-
-def mostrar_bienvenida():
-    """Muestra mensaje de bienvenida"""
-    print("=" * 60)
-    print("CONFIGURACIÓN DEL ANALIZADOR DE TEXTO AVANZADO")
-    print("=" * 60)
-    print("Este script instalará todas las dependencias necesarias")
-    print("y configurará el entorno para el analizador de texto.")
-    print("=" * 60)
-
-
-def verificar_python():
-    """Verifica la versión de Python"""
-    version = sys.version_info
-    print(f"Versión de Python detectada: {version.major}.{version.minor}.{version.micro}")
-
-    if version.major < 3 or (version.major == 3 and version.minor < 7):
-        print("ERROR: Se requiere Python 3.7 o superior")
+        print(f"Instalando {nombre_mostrar}...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", paquete])
+        print(f"✓ {nombre_mostrar} instalado correctamente")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"✗ Error instalando {nombre_mostrar}: {e}")
         return False
 
-    print("✓ Versión de Python compatible")
-    return True
 
-
-def crear_estructura_carpetas():
-    """Crea la estructura de carpetas necesaria"""
-    print("\nCreando estructura de carpetas...")
-
-    carpetas = [
-        'resultados',
-        'textos_ejemplo',
-        'reportes',
-        'visualizaciones',
-        'datos_temp'
-    ]
-
-    for carpeta in carpetas:
-        try:
-            if not os.path.exists(carpeta):
-                os.makedirs(carpeta)
-                print(f"✓ Carpeta creada: {carpeta}/")
-            else:
-                print(f"○ Carpeta ya existe: {carpeta}/")
-        except Exception as e:
-            print(f"✗ Error creando {carpeta}: {e}")
-
-
-def instalar_dependencias():
-    """Instala todas las dependencias necesarias"""
-    print("\nInstalando dependencias de Python...")
+def verificar_e_instalar_dependencias():
+    """
+    Verifica e instala las dependencias necesarias
+    """
+    print("=" * 60)
+    print("VERIFICACIÓN E INSTALACIÓN DE DEPENDENCIAS")
+    print("=" * 60)
 
     dependencias = [
-        'nltk>=3.8',
-        'pandas>=1.5.0',
-        'numpy>=1.21.0',
-        'matplotlib>=3.5.0',
-        'seaborn>=0.11.0',
-        'wordcloud>=1.9.0',
-        'plotly>=5.10.0',
-        'spacy>=3.4.0',
-        'textblob>=0.17.0',
-        'vaderSentiment>=3.3.0'
+        ("nltk", "Natural Language Toolkit"),
+        ("pandas", "Pandas - Data Analysis"),
+        ("numpy", "NumPy - Numerical Computing"),
+        ("matplotlib", "Matplotlib - Plotting"),
+        ("seaborn", "Seaborn - Statistical Visualization"),
+        ("wordcloud", "WordCloud - Nube de Palabras"),
+        ("plotly", "Plotly - Gráficos Interactivos"),
+        ("textblob", "TextBlob - Procesamiento de Texto"),
+        ("spacy", "spaCy - NLP Avanzado"),
+        ("vaderSentiment", "VADER - Análisis de Sentimientos")
     ]
 
-    errores = []
+    instalados = 0
+    fallos = []
 
-    for dep in dependencias:
+    for paquete, descripcion in dependencias:
         try:
-            print(f"Instalando {dep}...")
-            subprocess.check_call([
-                sys.executable, '-m', 'pip', 'install', dep, '--quiet'
-            ])
-            print(f"✓ {dep} instalado correctamente")
-        except subprocess.CalledProcessError as e:
-            print(f"✗ Error instalando {dep}")
-            errores.append(dep)
+            importlib.import_module(paquete.split('==')[0])
+            print(f"✓ {paquete:<15} - Ya instalado - {descripcion}")
+            instalados += 1
+        except ImportError:
+            print(f"⚠ {paquete:<15} - No encontrado, instalando...")
+            if instalar_paquete(paquete, descripcion):
+                instalados += 1
+            else:
+                fallos.append(paquete)
 
-    if errores:
-        print(f"\nAdvertencia: No se pudieron instalar: {', '.join(errores)}")
-        print("Intenta instalarlas manualmente con:")
-        for dep in errores:
-            print(f"pip install {dep}")
+    print(f"\nResumen: {instalados}/{len(dependencias)} dependencias instaladas")
 
-    return len(errores) == 0
+    if fallos:
+        print(f"Paquetes con fallos: {', '.join(fallos)}")
+
+    return len(fallos) == 0
 
 
 def configurar_nltk():
-    """Configura y descarga recursos de NLTK"""
-    print("\nConfigurando NLTK...")
-
-    configurar_ssl()
+    """
+    Configura y descarga recursos de NLTK
+    """
+    print("\n" + "=" * 60)
+    print("CONFIGURACIÓN DE NLTK")
+    print("=" * 60)
 
     try:
         import nltk
 
-        # Crear directorio de datos de NLTK si no existe
-        nltk_data_dir = os.path.join(os.path.expanduser('~'), 'nltk_data')
-        if not os.path.exists(nltk_data_dir):
-            os.makedirs(nltk_data_dir)
-
-        # Lista completa de recursos necesarios (incluyendo punkt_tab)
         recursos_nltk = [
-            'punkt',
-            'punkt_tab',  # Nuevo recurso requerido
             'stopwords',
+            'punkt',
             'vader_lexicon',
             'averaged_perceptron_tagger',
-            'wordnet',
-            'omw-1.4'
+            'wordnet'
         ]
 
         for recurso in recursos_nltk:
             try:
                 print(f"Descargando {recurso}...")
-                nltk.download(recurso, quiet=False)
+                nltk.download(recurso, quiet=True)
                 print(f"✓ {recurso} descargado")
             except Exception as e:
-                print(f"⚠ Advertencia descargando {recurso}: {e}")
+                print(f"⚠ Error descargando {recurso}: {e}")
 
-                # Intento alternativo para punkt_tab
-                if recurso == 'punkt_tab':
-                    try:
-                        print("Intentando descarga alternativa...")
-                        nltk.download('punkt_tab', download_dir=nltk_data_dir)
-                        print("✓ punkt_tab descargado (alternativo)")
-                    except:
-                        print("⚠ punkt_tab no disponible, se usará fallback")
-
-        print("✓ Configuración de NLTK completa")
+        print("✓ Configuración de NLTK completada")
         return True
 
     except ImportError:
-        print("✗ NLTK no está instalado correctamente")
+        print("✗ NLTK no está instalado")
+        return False
+    except Exception as e:
+        print(f"✗ Error configurando NLTK: {e}")
         return False
 
 
 def configurar_spacy():
-    """Configura spaCy y descarga el modelo en español"""
-    print("\nConfigurando spaCy...")
+    """
+    Configura spaCy y descarga el modelo en español
+    """
+    print("\n" + "=" * 60)
+    print("CONFIGURACIÓN DE SPACY")
+    print("=" * 60)
 
     try:
-        # Verificar si spaCy está instalado
         import spacy
 
-        # Intentar descargar el modelo en español
-        print("Descargando modelo en español para spaCy...")
+        # Verificar si el modelo ya está instalado
         try:
-            subprocess.check_call([
-                sys.executable, '-m', 'spacy', 'download', 'es_core_news_sm'
-            ])
-            print("✓ Modelo es_core_news_sm descargado")
-
-            # Verificar que el modelo se cargue correctamente
             nlp = spacy.load("es_core_news_sm")
-            print("✓ Modelo verificado correctamente")
+            print("✓ Modelo es_core_news_sm ya está instalado")
             return True
+        except OSError:
+            print("⚠ Modelo es_core_news_sm no encontrado, descargando...")
 
-        except subprocess.CalledProcessError:
-            print("⚠ Error descargando modelo de spaCy")
-            print("Puedes instalarlo manualmente con:")
-            print("python -m spacy download es_core_news_sm")
-            return False
+            try:
+                subprocess.check_call([
+                    sys.executable, "-m", "spacy", "download", "es_core_news_sm"
+                ])
+                print("✓ Modelo es_core_news_sm instalado correctamente")
+                return True
+            except subprocess.CalledProcessError as e:
+                print(f"✗ Error descargando modelo spaCy: {e}")
+                print("Intenta manualmente: python -m spacy download es_core_news_sm")
+                return False
 
     except ImportError:
-        print("✗ spaCy no está instalado correctamente")
+        print("✗ spaCy no está instalado")
         return False
 
 
 def crear_archivos_ejemplo():
-    """Crea archivos de ejemplo para pruebas"""
-    print("\nCreando archivos de ejemplo...")
+    """
+    Crea archivos de ejemplo para probar el analizador
+    """
+    print("\n" + "=" * 60)
+    print("CREANDO ARCHIVOS DE EJEMPLO")
+    print("=" * 60)
 
-    # Texto de ejemplo sobre IA
-    texto_ia = """La inteligencia artificial representa una de las revoluciones tecnológicas más importantes de nuestro tiempo. 
-Esta disciplina combina algoritmos sofisticados, grandes volúmenes de datos y poder computacional para crear 
-sistemas que pueden realizar tareas que tradicionalmente requerían inteligencia humana.
+    # Crear carpeta de ejemplos
+    carpeta_ejemplos = Path("textos_ejemplo")
+    carpeta_ejemplos.mkdir(exist_ok=True)
+    print(f"✓ Carpeta creada: {carpeta_ejemplos}")
 
-El machine learning, una rama fundamental de la IA, permite a las máquinas aprender patrones de los datos 
-sin ser programadas explícitamente para cada tarea específica. Esto ha llevado a avances extraordinarios 
-en campos como el reconocimiento de imágenes, procesamiento de lenguaje natural, y sistemas de recomendación.
+    ejemplos = {
+        "inteligencia_artificial.txt": """
+La inteligencia artificial representa una de las revoluciones tecnológicas más significativas de nuestro tiempo. 
+Esta disciplina, que combina algoritmos avanzados con grandes volúmenes de datos, está transformando 
+prácticamente todos los sectores de la economía global.
 
-Sin embargo, el desarrollo de la IA también plantea desafíos éticos y sociales importantes. Cuestiones como 
-la privacidad de datos, el sesgo algorítmico, y el impacto en el empleo requieren una consideración cuidadosa 
-mientras avanzamos hacia un futuro más automatizado.
+Los sistemas de machine learning han demostrado capacidades extraordinarias en tareas que tradicionalmente 
+requerían inteligencia humana. Desde el reconocimiento de imágenes hasta el procesamiento de lenguaje natural, 
+estas tecnologías están superando las expectativas más optimistas de los investigadores.
 
-La colaboración entre humanos y máquinas, más que el reemplazo completo, parece ser el camino más prometedor 
-para aprovechar al máximo el potencial de la inteligencia artificial mientras preservamos los valores humanos fundamentales."""
+Sin embargo, el desarrollo de la IA también plantea desafíos éticos y sociales importantes. La automatización 
+podría desplazar empleos tradicionales, mientras que los algoritmos de decisión pueden perpetuar sesgos 
+existentes en los datos de entrenamiento.
 
-    # Texto de ejemplo sobre cambio climático
-    texto_clima = """El cambio climático es uno de los desafíos más urgentes que enfrenta la humanidad en el siglo XXI. 
-Las evidencias científicas muestran que las actividades humanas, particularmente la emisión de gases 
-de efecto invernadero, están alterando el sistema climático global de manera significativa.
+Es fundamental que la sociedad aborde estos retos de manera proactiva, estableciendo marcos regulatorios 
+adecuados y promoviendo el desarrollo responsable de estas tecnologías. Solo así podremos maximizar los 
+beneficios de la IA mientras minimizamos sus riesgos potenciales.
 
-Los impactos del cambio climático ya son visibles en todo el mundo: aumento de las temperaturas globales, 
-derretimiento de glaciares, elevación del nivel del mar, y cambios en los patrones de precipitación. 
-Estos cambios tienen consecuencias profundas para los ecosistemas, la agricultura, y las comunidades humanas.
+El futuro de la inteligencia artificial dependerá de nuestra capacidad para equilibrar la innovación 
+tecnológica con la responsabilidad social, asegurando que estos avances sirvan al bienestar de toda la humanidad.
+        """,
 
-La transición hacia energías renovables y tecnologías limpias es fundamental para mitigar estos efectos. 
-Sin embargo, la adaptación también es crucial, ya que algunos cambios climáticos son inevitables debido 
-a las emisiones pasadas y presentes.
+        "cambio_climatico.txt": """
+El cambio climático constituye uno de los desafíos más apremiantes de la actualidad. Los datos científicos 
+muestran de manera inequívoca que las actividades humanas están alterando el sistema climático global 
+a un ritmo sin precedentes en la historia de la humanidad.
 
-La cooperación internacional, la innovación tecnológica, y los cambios en los estilos de vida son 
-elementos clave para abordar este desafío global de manera efectiva."""
+Las emisiones de gases de efecto invernadero, principalmente dióxido de carbono, han aumentado 
+dramáticamente desde la revolución industrial. Este incremento está provocando el calentamiento global, 
+con consecuencias que ya son visibles en todo el planeta.
 
-    # Texto de ejemplo sobre educación
-    texto_educacion = """La educación es la base fundamental para el desarrollo personal y social de los individuos. 
-En la era digital, los métodos de enseñanza y aprendizaje están experimentando una transformación 
-significativa, incorporando nuevas tecnologías y enfoques pedagógicos innovadores.
+Los efectos del cambio climático incluyen el aumento del nivel del mar, la intensificación de fenómenos 
+meteorológicos extremos, cambios en los patrones de precipitación y la alteración de ecosistemas completos. 
+Estas transformaciones amenazan la seguridad alimentaria, la disponibilidad de agua dulce y la habitabilidad 
+de muchas regiones del mundo.
 
-Las plataformas de aprendizaje en línea, la realidad virtual, y la inteligencia artificial están 
-revolucionando la forma en que accedemos al conocimiento. Estas herramientas permiten personalizar 
-la experiencia educativa, adaptándose a las necesidades y ritmos de aprendizaje individuales.
+La transición hacia energías renovables es fundamental para mitigar estos efectos. Las tecnologías solares, 
+eólicas e hidroeléctricas han alcanzado niveles de eficiencia y costos que las hacen competitivas con 
+los combustibles fósiles tradicionales.
 
-Sin embargo, la tecnología no puede reemplazar completamente la interacción humana en el proceso educativo. 
-Los educadores siguen siendo fundamentales para guiar, motivar, y proporcionar el contexto social 
-necesario para un aprendizaje efectivo.
+Además de la mitigación, es crucial desarrollar estrategias de adaptación que permitan a las sociedades 
+ajustarse a los cambios inevitables. Esto incluye la construcción de infraestructuras resilientes, 
+la protección de ecosistemas y la implementación de sistemas de alerta temprana.
+        """,
 
-El futuro de la educación probablemente combinará lo mejor de ambos mundos: la eficiencia y personalización 
-de la tecnología con la sabiduría y empatía humana."""
+        "educacion_digital.txt": """
+La educación digital ha experimentado una transformación acelerada, especialmente tras los desafíos 
+globales que obligaron a instituciones educativas de todo el mundo a adoptar modalidades virtuales 
+de enseñanza y aprendizaje.
 
-    ejemplos = [
-        ('inteligencia_artificial.txt', texto_ia),
-        ('cambio_climatico.txt', texto_clima),
-        ('educacion_digital.txt', texto_educacion)
-    ]
+Las plataformas de aprendizaje en línea han democratizado el acceso a la educación, permitiendo que 
+estudiantes de diversas ubicaciones geográficas y contextos socioeconómicos accedan a contenidos educativos 
+de alta calidad. Esta democratización representa una oportunidad sin precedentes para reducir las 
+brechas educativas globales.
 
-    for nombre_archivo, contenido in ejemplos:
-        ruta_archivo = os.path.join('textos_ejemplo', nombre_archivo)
+Sin embargo, la implementación efectiva de la educación digital requiere más que simplemente trasladar 
+contenidos tradicionales a formatos digitales. Es necesario repensar las metodologías pedagógicas, 
+desarrollar nuevas competencias digitales tanto en docentes como en estudiantes, y garantizar el acceso 
+equitativo a las tecnologías necesarias.
+
+Los datos y la analítica educativa están proporcionando insights valiosos sobre los procesos de aprendizaje, 
+permitiendo personalizar la experiencia educativa de manera más efectiva. Los sistemas adaptativos pueden 
+ajustar el ritmo y el contenido según las necesidades individuales de cada estudiante.
+
+La gamificación y las simulaciones interactivas están haciendo que el aprendizaje sea más atractivo y 
+efectivo, especialmente para las nuevas generaciones que han crecido inmersas en entornos digitales. 
+Estas herramientas pueden transformar conceptos abstractos en experiencias tangibles y memorables.
+        """
+    }
+
+    archivos_creados = 0
+    for nombre_archivo, contenido in ejemplos.items():
+        ruta_archivo = carpeta_ejemplos / nombre_archivo
         try:
             with open(ruta_archivo, 'w', encoding='utf-8') as f:
                 f.write(contenido.strip())
-            print(f"✓ Archivo creado: {ruta_archivo}")
+            print(f"✓ Creado: {nombre_archivo}")
+            archivos_creados += 1
         except Exception as e:
-            print(f"✗ Error creando {ruta_archivo}: {e}")
+            print(f"✗ Error creando {nombre_archivo}: {e}")
 
-
-def crear_script_prueba():
-    """Crea un script de prueba rápida"""
-    print("\nCreando script de prueba...")
-
-    script_prueba = '''# prueba_rapida.py
-# Script para probar que el analizador funciona correctamente
-
-from analizador_texto_avanzado import AnalizadorTextoAvanzado
-import os
-
-def main():
-    print("PRUEBA RÁPIDA DEL ANALIZADOR DE TEXTO")
-    print("=" * 40)
-
-    # Verificar que los archivos principales existen
-    archivos_requeridos = [
-        'analizador_texto_avanzado.py',
-        'ejemplo_uso.py',
-        'analizar_archivo.py'
-    ]
-
-    print("Verificando archivos...")
-    for archivo in archivos_requeridos:
-        if os.path.exists(archivo):
-            print(f"✓ {archivo}")
-        else:
-            print(f"✗ {archivo} - FALTA")
-            return False
-
-    # Probar importación
-    try:
-        print("\\nProbando importación...")
-        analizador = AnalizadorTextoAvanzado()
-        print("✓ Analizador importado correctamente")
-    except Exception as e:
-        print(f"✗ Error importando: {e}")
-        return False
-
-    # Probar análisis básico
-    try:
-        print("\\nProbando análisis básico...")
-        texto_prueba = """
-        Este es un texto de prueba para verificar que el analizador 
-        funciona correctamente. La inteligencia artificial está 
-        transformando nuestro mundo de manera extraordinaria.
-        """
-
-        resultados = analizador.analizar_texto_completo(texto_prueba)
-
-        print("✓ Análisis completado")
-        print(f"  - Palabras analizadas: {resultados['resumen_ejecutivo']['total_palabras']}")
-        print(f"  - Diversidad léxica: {resultados['resumen_ejecutivo']['diversidad_lexica']}")
-        print(f"  - Sentimiento: {resultados['resumen_ejecutivo']['sentimiento_general']}")
-
-    except Exception as e:
-        print(f"✗ Error en análisis: {e}")
-        return False
-
-    # Probar archivos de ejemplo
-    try:
-        print("\\nProbando archivos de ejemplo...")
-        archivo_ejemplo = os.path.join('textos_ejemplo', 'inteligencia_artificial.txt')
-        if os.path.exists(archivo_ejemplo):
-            with open(archivo_ejemplo, 'r', encoding='utf-8') as f:
-                contenido = f.read()
-            print(f"✓ Archivo de ejemplo leído ({len(contenido)} caracteres)")
-        else:
-            print("⚠ Archivo de ejemplo no encontrado")
-    except Exception as e:
-        print(f"✗ Error leyendo ejemplo: {e}")
-
-    print("\\n" + "=" * 40)
-    print("¡PRUEBA COMPLETADA EXITOSAMENTE!")
-    print("=" * 40)
-    print("\\nPróximos pasos:")
-    print("1. Ejecuta: python ejemplo_uso.py")
-    print("2. O ejecuta: python analizar_archivo.py")
-    print("3. Los reportes se guardarán automáticamente")
-
-    return True
-
-if __name__ == "__main__":
-    main()
-'''
-
-    try:
-        with open('prueba_rapida.py', 'w', encoding='utf-8') as f:
-            f.write(script_prueba)
-        print("✓ Script de prueba creado: prueba_rapida.py")
-    except Exception as e:
-        print(f"✗ Error creando script de prueba: {e}")
-
-
-def crear_fix_nltk():
-    """Crea el script para arreglar problemas de NLTK"""
-    print("\nCreando script de reparación NLTK...")
-
-    script_fix = '''# fix_nltk.py - Script para arreglar problemas de NLTK
-import nltk
-import ssl
-
-def configurar_ssl():
-    """Configura SSL para evitar errores de certificado"""
-    try:
-        _create_unverified_https_context = ssl._create_unverified_context
-    except AttributeError:
-        pass
-    else:
-        ssl._create_default_https_context = _create_unverified_https_context
-
-def descargar_recursos_nltk():
-    """Descarga todos los recursos necesarios de NLTK"""
-    configurar_ssl()
-
-    print("Descargando recursos de NLTK...")
-
-    # Lista completa de recursos necesarios (incluyendo los nuevos)
-    recursos = [
-        'punkt',
-        'punkt_tab',  # Nuevo recurso requerido
-        'stopwords',
-        'vader_lexicon',
-        'averaged_perceptron_tagger',
-        'wordnet',
-        'omw-1.4'
-    ]
-
-    errores = []
-
-    for recurso in recursos:
-        try:
-            print(f"Descargando {recurso}...")
-            nltk.download(recurso, quiet=False)
-            print(f"✓ {recurso} descargado exitosamente")
-        except Exception as e:
-            print(f"✗ Error descargando {recurso}: {e}")
-            errores.append(recurso)
-
-    if errores:
-        print(f"\\nRecursos que fallaron: {errores}")
-        print("Intentando descarga completa...")
-        try:
-            nltk.download('all')
-            print("✓ Descarga completa exitosa")
-        except Exception as e:
-            print(f"✗ Error en descarga completa: {e}")
-
-    # Verificar que los recursos están disponibles
-    verificar_recursos()
-
-def verificar_recursos():
-    """Verifica que los recursos estén correctamente instalados"""
-    print("\\nVerificando recursos...")
-
-    try:
-        from nltk.tokenize import word_tokenize, sent_tokenize
-        from nltk.corpus import stopwords
-
-        # Probar tokenización
-        texto_prueba = "Hola mundo. Este es un texto de prueba."
-
-        # Probar sent_tokenize (usa punkt_tab)
-        oraciones = sent_tokenize(texto_prueba, language='spanish')
-        print(f"✓ Tokenización de oraciones funciona: {len(oraciones)} oraciones")
-
-        # Probar word_tokenize
-        palabras = word_tokenize(texto_prueba, language='spanish')
-        print(f"✓ Tokenización de palabras funciona: {len(palabras)} palabras")
-
-        # Probar stopwords
-        stop_words = stopwords.words('spanish')
-        print(f"✓ Stopwords españolas disponibles: {len(stop_words)} palabras")
-
-        print("\\n✅ Todos los recursos funcionan correctamente!")
-        return True
-
-    except Exception as e:
-        print(f"\\nError verificando recursos: {e}")
-        return False
-
-if __name__ == "__main__":
-    print("SOLUCIONADOR DE PROBLEMAS NLTK")
-    print("=" * 40)
-    descargar_recursos_nltk()
-'''
-
-    try:
-        with open('fix_nltk.py', 'w', encoding='utf-8') as f:
-            f.write(script_fix)
-        print("✓ Script de reparación creado: fix_nltk.py")
-    except Exception as e:
-        print(f"✗ Error creando script de reparación: {e}")
+    print(f"\n✓ {archivos_creados} archivos de ejemplo creados en '{carpeta_ejemplos}'")
+    return archivos_creados > 0
 
 
 def verificar_instalacion():
-    """Verifica que todo esté correctamente instalado"""
-    print("\nVerificando instalación completa...")
+    """
+    Verifica que la instalación sea correcta
+    """
+    print("\n" + "=" * 60)
+    print("VERIFICACIÓN FINAL DE LA INSTALACIÓN")
+    print("=" * 60)
 
-    verificaciones = []
+    # Verificar archivo principal
+    if not Path("analizador_texto_avanzado_corregido.py").exists():
+        print("✗ Archivo principal no encontrado: analizador_texto_avanzado_corregido.py")
+        return False
 
-    # Verificar librerías principales
-    librerias = [
-        'nltk', 'pandas', 'numpy', 'matplotlib',
-        'seaborn', 'wordcloud', 'plotly', 'spacy', 'textblob'
-    ]
-
-    print("Verificando librerías...")
-    for lib in librerias:
-        try:
-            __import__(lib)
-            print(f"✓ {lib}")
-            verificaciones.append(True)
-        except ImportError:
-            print(f"✗ {lib} - NO INSTALADA")
-            verificaciones.append(False)
-
-    # Verificar modelo de spaCy
     try:
-        import spacy
-        nlp = spacy.load("es_core_news_sm")
-        print("✓ Modelo spaCy es_core_news_sm")
-        verificaciones.append(True)
-    except (ImportError, OSError):
-        print("⚠ Modelo spaCy es_core_news_sm - NO DISPONIBLE")
-        verificaciones.append(False)
+        # Importar y probar
+        sys.path.insert(0, '.')
+        from analizador_texto_avanzado_corregido import AnalizadorTextoAvanzado
 
-    # Verificar archivos
-    archivos_clave = [
-        'analizador_texto_avanzado.py',
-        'ejemplo_uso.py',
-        'analizar_archivo.py',
-        'prueba_rapida.py',
-        'fix_nltk.py'
-    ]
+        analizador = AnalizadorTextoAvanzado()
+        print("✓ Analizador importado correctamente")
 
-    print("\\nVerificando archivos...")
-    for archivo in archivos_clave:
-        if os.path.exists(archivo):
-            print(f"✓ {archivo}")
-            verificaciones.append(True)
+        # Prueba básica
+        texto_prueba = "Este es un texto de prueba para verificar la funcionalidad básica."
+        resultados = analizador.analizar_texto_completo(texto_prueba)
+
+        if resultados and 'resumen_ejecutivo' in resultados:
+            print("✓ Análisis básico funciona correctamente")
+            return True
         else:
-            print(f"✗ {archivo} - FALTA")
-            verificaciones.append(False)
+            print("✗ El análisis no generó resultados esperados")
+            return False
 
-    # Verificar carpetas
-    carpetas = ['resultados', 'textos_ejemplo', 'reportes', 'visualizaciones']
-    print("\\nVerificando carpetas...")
-    for carpeta in carpetas:
-        if os.path.exists(carpeta):
-            print(f"✓ {carpeta}/")
-            verificaciones.append(True)
-        else:
-            print(f"✗ {carpeta}/ - FALTA")
-            verificaciones.append(False)
-
-    # Resultado final
-    exitos = sum(verificaciones)
-    total = len(verificaciones)
-    porcentaje = (exitos / total) * 100
-
-    print(f"\\nRESULTADO: {exitos}/{total} verificaciones exitosas ({porcentaje:.1f}%)")
-
-    if porcentaje >= 80:
-        print("✓ INSTALACIÓN EXITOSA - El analizador está listo para usar")
-        return True
-    else:
-        print("✗ INSTALACIÓN INCOMPLETA - Revisa los errores anteriores")
+    except ImportError as e:
+        print(f"✗ Error de importación: {e}")
+        return False
+    except Exception as e:
+        print(f"✗ Error en verificación: {e}")
         return False
 
 
 def mostrar_instrucciones_uso():
-    """Muestra instrucciones de uso"""
-    print("\\n" + "=" * 60)
+    """
+    Muestra instrucciones de uso
+    """
+    print("\n" + "=" * 60)
     print("INSTRUCCIONES DE USO")
     print("=" * 60)
 
-    print("\\n1. ARREGLAR PROBLEMAS NLTK (si es necesario):")
-    print("   python fix_nltk.py")
+    print("""
+🎉 ¡Instalación completada exitosamente!
 
-    print("\\n2. PRUEBA RÁPIDA:")
-    print("   python prueba_rapida.py")
+FORMAS DE USAR EL ANALIZADOR:
 
-    print("\\n3. ANÁLISIS BÁSICO:")
-    print("   python ejemplo_uso.py")
+1. Ejemplo básico:
+   python ejemplo_uso_corregido.py
 
-    print("\\n4. ANÁLISIS INTERACTIVO:")
-    print("   python analizar_archivo.py")
+2. Análisis de archivo:
+   python analizador_texto_avanzado_corregido.py --archivo mi_texto.txt
 
-    print("\\n5. LÍNEA DE COMANDOS:")
-    print("   python analizador_texto_avanzado.py --archivo mi_texto.txt")
-    print("   python analizador_texto_avanzado.py --carpeta mis_textos/")
-    print("   python analizador_texto_avanzado.py --carpeta mis_textos/ --comparar")
+3. Análisis de carpeta:
+   python analizador_texto_avanzado_corregido.py --carpeta textos_ejemplo/
 
-    print("\\n6. ARCHIVOS DE EJEMPLO:")
-    print("   Los archivos de ejemplo están en la carpeta 'textos_ejemplo/'")
-    print("   Puedes usarlos para probar el analizador")
+4. Modo interactivo:
+   python analizador_texto_avanzado_corregido.py
 
-    print("\\n7. RESULTADOS:")
-    print("   Los reportes se guardan automáticamente en:")
-    print("   - Archivos HTML (visuales)")
-    print("   - Archivos JSON (datos)")
-    print("   - Archivos TXT (texto plano)")
-    print("   - Nube de palabras (PNG)")
-    print("   - Dashboard interactivo (HTML)")
+5. Análisis comparativo:
+   python analizador_texto_avanzado_corregido.py --carpeta textos_ejemplo/ --comparar
 
+ARCHIVOS DISPONIBLES:
+- analizador_texto_avanzado_corregido.py (módulo principal)
+- ejemplo_uso_corregido.py (ejemplo de uso)
+- textos_ejemplo/ (carpeta con archivos de prueba)
 
-def limpiar_instalacion():
-    """Limpia archivos temporales de instalación"""
-    print("\\nLimpiando archivos temporales...")
+PRÓXIMOS PASOS:
+1. Ejecuta: python ejemplo_uso_corregido.py
+2. Experimenta con tus propios textos
+3. Revisa los reportes HTML generados
 
-    archivos_temp = [
-        '__pycache__',
-        '*.pyc',
-        '.pytest_cache'
-    ]
-
-    import glob
-    import shutil
-
-    for patron in archivos_temp:
-        for archivo in glob.glob(patron, recursive=True):
-            try:
-                if os.path.isdir(archivo):
-                    shutil.rmtree(archivo)
-                else:
-                    os.remove(archivo)
-                print(f"✓ Eliminado: {archivo}")
-            except Exception as e:
-                print(f"✗ Error eliminando {archivo}: {e}")
+¡Disfruta analizando textos! 📊📈
+    """)
 
 
 def main():
-    """Función principal de configuración"""
-    mostrar_bienvenida()
+    """
+    Función principal de configuración
+    """
+    print("=" * 60)
+    print("CONFIGURADOR DEL ANALIZADOR DE TEXTO AVANZADO")
+    print("=" * 60)
+    print("Este script configurará automáticamente el entorno completo\n")
 
     # Verificar Python
-    if not verificar_python():
-        print("\\nERROR: Versión de Python no compatible")
+    if sys.version_info < (3, 7):
+        print("❌ Se requiere Python 3.7 o superior")
+        print(f"Versión actual: {sys.version}")
         return False
 
-    # Crear estructura
-    crear_estructura_carpetas()
+    print(f"✓ Python {sys.version_info.major}.{sys.version_info.minor} detectado")
 
-    # Preguntar sobre instalación de dependencias
-    print("\\n" + "=" * 60)
-    respuesta = input("¿Deseas instalar las dependencias de Python? (s/n): ").lower()
+    # Paso 1: Instalar dependencias
+    if not verificar_e_instalar_dependencias():
+        print("\n❌ Falló la instalación de dependencias críticas")
+        return False
 
-    if respuesta in ['s', 'si', 'sí', 'y', 'yes']:
-        if not instalar_dependencias():
-            print("\\nAdvertencia: Algunas dependencias no se instalaron correctamente")
+    # Paso 2: Configurar NLTK
+    if not configurar_nltk():
+        print("\n⚠ Advertencia: NLTK no se configuró completamente")
 
-        # Configurar NLTK
-        if not configurar_nltk():
-            print("\\nAdvertencia: Error configurando NLTK")
+    # Paso 3: Configurar spaCy
+    if not configurar_spacy():
+        print("\n⚠ Advertencia: spaCy no se configuró completamente")
+        print("El analizador funcionará con funcionalidad limitada")
 
-        # Configurar spaCy
-        if not configurar_spacy():
-            print("\\nAdvertencia: Error configurando spaCy (funcionalidad limitada)")
-    else:
-        print("\\nSaltando instalación de dependencias...")
-        print("Asegúrate de instalarlas manualmente con:")
-        print("pip install nltk pandas numpy matplotlib seaborn wordcloud plotly spacy textblob vaderSentiment")
-
-    # Crear archivos de ejemplo
+    # Paso 4: Crear archivos de ejemplo
     crear_archivos_ejemplo()
 
-    # Crear script de prueba
-    crear_script_prueba()
-
-    # Crear script de reparación NLTK
-    crear_fix_nltk()
-
-    # Verificar instalación
-    print("\\n" + "=" * 60)
+    # Paso 5: Verificación final
     if verificar_instalacion():
-        print("\\n¡CONFIGURACIÓN COMPLETADA EXITOSAMENTE!")
         mostrar_instrucciones_uso()
-
-        # Preguntar si ejecutar prueba
-        print("\\n" + "=" * 60)
-        respuesta = input("¿Deseas ejecutar la prueba rápida ahora? (s/n): ").lower()
-        if respuesta in ['s', 'si', 'sí', 'y', 'yes']:
-            print("\\nEjecutando prueba rápida...")
-            try:
-                exec(open('prueba_rapida.py').read())
-            except Exception as e:
-                print(f"Error ejecutando prueba: {e}")
-                print("Puedes ejecutarla manualmente con: python prueba_rapida.py")
-
-        # Limpiar archivos temporales
-        limpiar_instalacion()
-
-        print("\\n✓ ¡El Analizador de Texto Avanzado está listo para usar!")
         return True
     else:
-        print("\\nLa configuración no se completó correctamente")
+        print("\n❌ La verificación final falló")
         print("Revisa los errores anteriores e intenta nuevamente")
-        print("\\nSi tienes problemas con NLTK, ejecuta: python fix_nltk.py")
         return False
 
 
 if __name__ == "__main__":
     try:
-        main()
+        exito = main()
+        if exito:
+            print("\n🎉 ¡Configuración completada exitosamente!")
+        else:
+            print("\n❌ La configuración no se completó correctamente")
+            sys.exit(1)
+
     except KeyboardInterrupt:
-        print("\\n\\nConfiguración cancelada por el usuario")
+        print("\n\nConfiguración cancelada por el usuario")
+        sys.exit(1)
     except Exception as e:
-        print(f"\\n\\nError inesperado durante la configuración: {e}")
-        print("Por favor, reporta este error si persiste")
+        print(f"\n\nError inesperado durante la configuración: {e}")
+        sys.exit(1)
